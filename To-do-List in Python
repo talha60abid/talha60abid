@@ -1,0 +1,71 @@
+from tkinter import *
+from tkinter import messagebox, simpledialog
+
+def newTask():
+    task = my_entry.get()
+    if task != "":
+        lb.insert(END, task)
+        my_entry.delete(0, "end")
+    else:
+        messagebox.showwarning("Warning", "Please enter some task.")
+
+def deleteTask():
+    lb.delete(ANCHOR)
+
+def editTask():
+    selected_index = lb.curselection()
+    if selected_index:
+        task_index = selected_index[0]
+        task = lb.get(task_index)
+
+        # Open a dialog box to let the user edit the task
+        edited_task = simpledialog.askstring("Edit Task", "Edit the task:", initialvalue=task)
+
+        if edited_task is not None:
+            # Update the task in the listbox
+            lb.delete(task_index)
+            lb.insert(task_index, edited_task)
+
+
+ws = Tk()
+ws.geometry('500x450+500+200')
+ws.title('To-Do-List')
+ws.config(bg='#ADD8E6')
+ws.resizable(width=False, height=False)
+
+# for image icon
+Image_icon = PhotoImage(file="task.png")
+ws.iconphoto(False, Image_icon)
+
+heading_label = Label(ws, text="ALL TASK", font=('arial', 20, 'bold'), bg='#32405b', fg='white')
+heading_label.pack(pady=10)
+
+frame = Frame(ws)
+frame.pack(pady=10)
+
+lb = Listbox(frame, width=25, height=8, font=('arial', 18, 'bold'), bd=0, fg='#464646', highlightthickness=0, selectbackground='#a6a6a6', activestyle="none",)
+lb.pack(side=LEFT, fill=BOTH)
+
+sb = Scrollbar(frame)
+sb.pack(side=RIGHT, fill=BOTH)
+
+lb.config(yscrollcommand=sb.set)
+sb.config(command=lb.yview)
+
+my_entry = Entry(ws, font=('times', 24))
+
+my_entry.pack(pady=5)
+
+button_frame = Frame(ws)
+button_frame.pack(pady=20)
+
+addTask_btn = Button(button_frame, text='ADD', font=('arial', 18, 'bold'), bg='#c5f776', padx=20, pady=10, command=newTask)
+addTask_btn.pack(fill=BOTH, expand=True, side=LEFT)
+
+editTask_btn = Button(button_frame, text='EDIT', font=('arial', 18, 'bold'), bg='#00bfff', padx=20, pady=10, command=editTask)
+editTask_btn.pack(fill=BOTH, expand=True, side=LEFT)
+
+delTask_btn = Button(button_frame, text='DELETE', font=('arial', 18, 'bold'), bg='#ff8b61', padx=10, pady=10, command=deleteTask)
+delTask_btn.pack(fill=BOTH, expand=True, side=LEFT)
+
+ws.mainloop()
